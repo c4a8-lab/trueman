@@ -14,7 +14,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Trueman.Core.Extensions;
+using Trueman.Core.Services;
 using Trueman.Web.Data;
+using Trueman.Web.Services;
 
 namespace Trueman.Web
 {
@@ -32,10 +35,10 @@ namespace Trueman.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-               .AddMicrosoftIdentityWebApp(Configuration.GetSection("AzureAd"))
-               .EnableTokenAcquisitionToCallDownstreamApi()
-               .AddMicrosoftGraph()
-               .AddInMemoryTokenCaches();
+               .AddMicrosoftIdentityWebApp(Configuration.GetSection("AzureAd"));
+
+            services.AddCommonServices(Configuration);
+            services.AddScoped<ICurrentUserService, CurrentUserService>();
 
             services.AddControllersWithViews().AddMicrosoftIdentityUI();
 

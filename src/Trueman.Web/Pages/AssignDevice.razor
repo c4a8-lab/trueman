@@ -1,0 +1,40 @@
+﻿@page "/assign-device"
+@*@if (WindowsAutopilotDevicesAssignedToUserDto != null && WindowsAutopilotDevicesAssignedToUserDto.HasAlreadyAssignedDevices)
+    {
+        <div class="col-lg-12 text-center">
+            <EditForm Model="@Model" OnValidSubmit="HandleInvalidSubmit" OnInvalidSubmit="HandleInvalidSubmit">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <div class="form-group row">
+                    <label class="col-sm-3">Select device: </label>
+                    <InputSelect class="form-control col-sm-8" @bind-Value=@Model.SerialNumber>
+                        <option value="@null">---</option>
+                        @foreach (var item in WindowsAutopilotDevicesAssignedToUserDto.Items)
+                            {
+                            <option value="@(item.SerialNumber)">@($"{item.SerialNumber}({item.Manufacturer})")</option>
+                            }
+                    </InputSelect>
+                    <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => Model.SerialNumber)" />
+                </div>
+                <button type="submit" class="btn btn-primary edit-btn">Submit</button>
+            </EditForm>
+        </div>
+    }*@
+<h3>Enter a new serial number</h3>
+
+<div class="col-lg-12 text-center">
+    @if (!string.IsNullOrEmpty(Message))
+{
+    <div class="alert @StatusClass">@Message</div>
+}
+    <EditForm Model="@Model" OnValidSubmit="HandleValidSubmit" OnInvalidSubmit="HandleInvalidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="form-group row">
+            <label class="col-sm-3">Enter serial number: </label>
+            <InputText class="form-control col-sm-8" @bind-Value=@Model.SerialNumber></InputText>
+            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => Model.SerialNumber)" />
+        </div>
+        <button type="submit" class="btn btn-primary edit-btn">Submit</button>
+    </EditForm>
+</div>
