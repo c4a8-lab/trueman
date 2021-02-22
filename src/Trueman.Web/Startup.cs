@@ -35,27 +35,13 @@ namespace Trueman.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-               .AddMicrosoftIdentityWebApp(Configuration.GetSection("AzureAd"));
+               .AddMicrosoftIdentityWebApp(Configuration.GetSection("AppConfig:TenantConfig"))
+               .EnableTokenAcquisitionToCallDownstreamApi().AddInMemoryTokenCaches();
 
             services.AddCommonServices(Configuration);
             services.AddScoped<ICurrentUserService, CurrentUserService>();
 
             services.AddControllersWithViews().AddMicrosoftIdentityUI();
-
-
-            //services.AddControllersWithViews(options =>
-            //{
-            //    var policy = new AuthorizationPolicyBuilder()
-            //        .RequireAuthenticatedUser()
-            //        .Build();
-            //    options.Filters.Add(new AuthorizeFilter(policy));
-            //}).AddMicrosoftIdentityUI();
-
-            //services.AddAuthorization(options =>
-            //{
-            //    // By default, all incoming requests will be authorized according to the default policy
-            //    options.FallbackPolicy = options.DefaultPolicy;
-            //});
 
             services.AddRazorPages();
             services.AddServerSideBlazor().AddMicrosoftIdentityConsentHandler();

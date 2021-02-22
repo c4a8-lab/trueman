@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Graph.Auth" Version="1.0.0-preview.6" />
-    <PackageReference Include="Microsoft.Graph.Beta" Version="0.37.0-preview" />
+    <PackageReference Include="Microsoft.Graph.Beta" Version="0.38.0-preview" />
     <PackageReference Include="Microsoft.Identity.Web" Version="1.6.0" />
   </ItemGroup>
 

@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Trueman.Core.Clients.TemporaryAccessPass;
 using Trueman.Core.Models;
 
 namespace Trueman.Core.Services
@@ -9,30 +10,42 @@ namespace Trueman.Core.Services
     public class UserGraphService
     {
         private readonly IGraphClientProvider _graphClientProvider;
-        private readonly ICurrentUserService _currentUserService;
+        private readonly TemporaryAccessPassClient _temporaryAccessPassClient;
 
-        public UserGraphService(IGraphClientProvider graphClientProvider, ICurrentUserService currentUserService)
+        public UserGraphService(IGraphClientProvider graphClientProvider, TemporaryAccessPassClient temporaryAccessPassClient)
         {
             _graphClientProvider = graphClientProvider;
-            _currentUserService = currentUserService;
+            _temporaryAccessPassClient = temporaryAccessPassClient;
         }
         private GraphServiceClient GraphClient => _graphClientProvider.CreateGraphServiceClient();
 
-        public async Task SetUserPasswordAsync(string password)
+        public async Task<TapData> SetTapAsync(string userPrincipalName)
         {
-            var user = await GraphClient
-                 .Users[_currentUserService.UserPrincipalName]
-                 .Request()
-                 .UpdateAsync(new User
-                 {
-                     PasswordProfile = new PasswordProfile
-                     {
-                         ForceChangePasswordNextSignIn = false,
-                         ForceChangePasswordNextSignInWithMfa = false,
-                         Password = password
-                     }
-                 });
+            var existingTap = await _temporaryAccessPassClient.GetTapFromListAsync(userPrincipalName);
+            if (existingTap != null)
+            {
+                await _temporaryAccessPassClient.DeleteTapAsync(userPrincipalName, existingTap.Id);
+            }
+
+            var response = await _temporaryAccessPassClient.CreateTapAsync(new TapToCreateDto { UserPrincipalName = userPrincipalName, IsUsableOnce = true });
+            return response;
         }
+
+        //public async Task SetUserPasswordAsync(string password)
+        //{
+        //    var user = await GraphClient
+        //         .Users[_currentUserService.UserPrincipalName]
+        //         .Request()
+        //         .UpdateAsync(new User
+        //         {
+        //             PasswordProfile = new PasswordProfile
+        //             {
+        //                 ForceChangePasswordNextSignIn = false,
+        //                 ForceChangePasswordNextSignInWithMfa = false,
+        //                 Password = password
+        //             }
+        //         });
+        //}
 
         public async Task<UserInfoDto> GetUserAsync(string userPrincipalName)
         {

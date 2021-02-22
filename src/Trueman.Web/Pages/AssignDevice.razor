@@ -20,21 +20,30 @@
             </EditForm>
         </div>
     }*@
-<h3>Enter a new serial number</h3>
 
-<div class="col-lg-12 text-center">
-    @if (!string.IsNullOrEmpty(Message))
-{
-    <div class="alert @StatusClass">@Message</div>
-}
-    <EditForm Model="@Model" OnValidSubmit="HandleValidSubmit" OnInvalidSubmit="HandleInvalidSubmit">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-        <div class="form-group row">
-            <label class="col-sm-3">Enter serial number: </label>
-            <InputText class="form-control col-sm-8" @bind-Value=@Model.SerialNumber></InputText>
-            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => Model.SerialNumber)" />
+<div class="container mt-5 d-flex justify-content-center" style="margin-top: 5rem !important; ">
+    <div class="card mb-3">
+        <img src="https://gkstaticimages.z6.web.core.windows.net/le-yoga%20-13ikb.png" class="card-img-top" style="width: 35vw;
+        align-self: center;" alt="...">
+        <div class="card-body px-4">
+            <p class="card-text">Bitte geben Sie hier die Seriennummer ein. Sie sollten die Seriennummer des Geräts auf der Verpackung oder am Gerät selbst finden.</p>
+
+            <div>
+                <EditForm Model="@Model" OnValidSubmit="HandleValidSubmit" OnInvalidSubmit="HandleInvalidSubmit">
+                    @if (!string.IsNullOrEmpty(Message))
+                    {
+                        <div class="alert @StatusClass">
+                            @Message
+                            <ValidationMessage class="alert offset-sm-3 col-sm-8" For="@(() => Model.SerialNumber)" />
+                        </div>
+                    }
+                    <DataAnnotationsValidator />
+                    <div class="form-group row  justify-content-center">
+                        <InputText class="form-control col-sm-8" @bind-Value=@Model.SerialNumber></InputText>
+                        <button type="submit" class="btn btn-primary edit-btn">Submit</button>
+                    </div>
+                </EditForm>
+            </div>
         </div>
-        <button type="submit" class="btn btn-primary edit-btn">Submit</button>
-    </EditForm>
+    </div>
 </div>

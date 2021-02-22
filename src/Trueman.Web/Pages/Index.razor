@@ -3,37 +3,58 @@
 
 @if (UserInfo != null && UserInfo.User != null)
 {
-    <div class="col-lg-12 text-center">
-        <form>
-            <div class="form-group row">
-                <label for="staticEmail" class="col-sm-2 col-form-label">UPN</label>
-                <div class="col-sm-10">
-                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="@UserInfo.User.UserPrincipalName">
+
+    <div class="container mt-5 d-flex justify-content-center" style="margin-top: 5rem !important; ">
+        <div class="pcard p-3">
+            <div class="d-flex align-items-center">
+                @if (!string.IsNullOrWhiteSpace(UserInfo.PictureBase64))
+                {
+                    <div class="image"> <img src="@($"data:image/png;base64,{UserInfo.PictureBase64}")" class="rounded" width="155"> </div>
+                }
+                <div class="ml-3 w-100" style="height: 100%;">
+                    <span>Willkommen</span>
+                    <h4 class="mb-0 mt-0">@UserInfo.User.GivenName @UserInfo.User.Surname</h4> <span>@UserInfo.User.UserPrincipalName</span>
                 </div>
             </div>
-            <div class="form-group row">
-                <label for="staticEmail" class="col-sm-2 col-form-label">First name</label>
-                <div class="col-sm-10">
-                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="@UserInfo.User.GivenName">
+        </div>
+    </div>
+
+    <div class="container mt-1 justify-content-center">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col">
+                <div class="card h-70">
+                    <img src="https://gkstaticimages.z6.web.core.windows.net/generic-apple-iphone.png" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">Apple-Gerät</h5>
+                        <p class="card-text">Hier geht es weiter, wenn Sie ein iPhone oder iPad einrichten möchten.</p>
+                    </div>
+                    <div class="button mt-2 d-flex flex-row justify-content-center"><button class="btn btn-sm btn-primary w-50 ml-2" @onclick="@NavigateToDeviceAssignment">Auswählen</button> </div>
                 </div>
             </div>
-            <div class="form-group row">
-                <label for="staticEmail" class="col-sm-2 col-form-label">Last name</label>
-                <div class="col-sm-10">
-                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="@UserInfo.User.Surname">
+
+            <div class="col">
+                <div class="card h-70">
+                    <img src="https://gkstatic.s3.amazonaws.com/2021-02-19-android.png" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">Android-Gerät</h5>
+                        <p class="card-text">Hier geht es weiter, wenn Sie ein Android-Gerät einrichten möchten.</p>
+                    </div>
+                    <div class="button mt-2 d-flex flex-row justify-content-center"><button class="btn btn-sm btn-primary w-50 ml-2" @onclick="@NavigateToDeviceAssignment">Auswählen</button> </div>
                 </div>
-            </div>
-            @if (!string.IsNullOrWhiteSpace(UserInfo.PictureBase64))
-            {
-                <div class="form-group row">
-                    <label for="staticEmail" class="col-sm-2 col-form-label">Photo</label>
-                    <div class="col-sm-10">
-                        <img src="@($"data:image/png;base64,{UserInfo.PictureBase64}")">
+                </div>
+
+                <div class="col">
+                    <div class="card h-70">
+                        <img src="https://gkstaticimages.z6.web.core.windows.net/le-yoga%20-13ikb.png" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">Windows-Gerät</h5>
+                            <p class="card-text">Hier geht es weiter, wenn Sie ein Windows Notebook einrichten möchten.</p>
+                        </div>
+                        <div class="button mt-2 d-flex flex-row justify-content-center"><button class="btn btn-sm btn-primary w-50 ml-2" @onclick="@NavigateToDeviceAssignment">Auswählen</button> </div>
                     </div>
                 </div>
-            }
-        </form>
-    </div>
-    <a class="btn btn-outline-primary" @onclick="@NavigateToDeviceAssignment">Next</a>
+            </div>
+        </div>
+
 }
 

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using System.Threading.Tasks;
+using Trueman.Core.Clients.TemporaryAccessPass;
 using Trueman.Core.Services;
 using Trueman.Web.Models;
 
@@ -7,35 +9,39 @@ namespace Trueman.Web.Pages
 {
     public partial class SetPassword
     {
+        [CascadingParameter]
+        protected Task<AuthenticationState> AuthState { get; set; }
+
         [Inject]
         public UserGraphService UserGraphService { get; set; }
         [Inject]
         public NavigationManager NavigationManager { get; set; }
-
-        public SetPasswordViewModel Model { get; set; } = new SetPasswordViewModel();
+        public TapData Response { get; set; }
 
         protected string Message = string.Empty;
         protected string StatusClass = string.Empty;
 
-        protected async Task HandleValidSubmit()
+        protected override async Task OnInitializedAsync()
         {
+            var state = await AuthState;
+
             Message = string.Empty;
             StatusClass = string.Empty;
             try
             {
-                await UserGraphService.SetUserPasswordAsync(Model.Password);
-                NavigationManager.NavigateTo("/thank-you");
+                Response = await UserGraphService.SetTapAsync(state.User.Identity.Name);
             }
             catch (System.Exception ex)
             {
                 StatusClass = "alert-danger";
-                Message = "An error occurred while setting the password";
+                Message = "An error occurred while setting the temporary access password for you.";
             }
+            await base.OnInitializedAsync();
         }
-        protected void HandleInvalidSubmit()
+
+        protected void TryAgain()
         {
-            StatusClass = "alert-danger";
-            Message = "There are some validation errors. Please try again.";
+            NavigationManager.NavigateTo("/set-password", true);
         }
     }
 }

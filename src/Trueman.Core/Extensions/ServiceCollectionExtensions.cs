@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Trueman.Core.Clients.TemporaryAccessPass;
 using Trueman.Core.Config;
 using Trueman.Core.Services;
 
@@ -15,6 +16,8 @@ namespace Trueman.Core.Extensions
             configuration.GetSection(nameof(AppConfig)).Bind(appConfig);
             //Create singleton from instance
             services.AddSingleton<AppConfig>(appConfig);
+
+            services.AddHttpClient<TemporaryAccessPassClient>();
 
             services.AddScoped<IGraphClientProvider, GraphClientProvider>();
             services.AddScoped<UserDeviceManagementService>();

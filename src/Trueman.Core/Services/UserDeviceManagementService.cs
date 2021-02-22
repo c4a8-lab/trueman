@@ -41,6 +41,15 @@ namespace Trueman.Core.Services
         public async Task<AssignDeviceToUserResponse> AssignDeviceToUserAsync(string serialNumber)
         {
             var device = await GetWindowsAutopilotDeviceStatusAsync(serialNumber);
+
+            if(device.Found && device.AssignedToThisUser)
+            {
+                return new AssignDeviceToUserResponse
+                {
+                    Success = true
+                };
+            }
+
             if (device.Found && !device.Enrolled && !device.AssignedToThisUser && !device.AssignedToOtherUser)
             {
                 await _windowsAutopilotGraphService.AssignUserToDeviceAsync(device.WindowsAutopilotDeviceIdentity.Id, _currentUserService.UserPrincipalName, _currentUserService.DisplayName);
@@ -58,9 +67,9 @@ namespace Trueman.Core.Services
             {
                 errorMessage = $"Device #{serialNumber} already enrolled";
             }
-            if (device.AssignedToOtherUser || device.AssignedToThisUser)
+            if (device.AssignedToOtherUser)
             {
-                errorMessage = $"Device #{serialNumber} already assigned";
+                errorMessage = $"Device with #{serialNumber} couldn't be assigned to you";
             }
             return new AssignDeviceToUserResponse
             {
